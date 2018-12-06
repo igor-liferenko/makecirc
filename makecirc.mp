@@ -1,35 +1,36 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%||||||||||||||||||||«makecirc.mp»|||||||||||||||||||||||||%%
-%%==========================================================%%
-%<------------------- version 1.1 ------------------------->%%
-% A MetaPost library for drawing electrical circuit diagrams.
-% Copyright (c) 2003 GS Bustamante Argañaraz. 
-% It uses latex.mp by JL Diaz.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% This program may be distributed and/or modified under the conditions
-% of the LaTeX Project Public License, either version 1.2 of this
-% license or (at your option) any later version.  The latest version
-% of this license is in http://www.latex-project.org/lppl.txt and
-% version 1.2 or later is part of all distributions of LaTeX version
-% 1999/12/01 or later.
-%
-% This program consists of the files makecirc.mp and latex.mp
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-input latex;
-%
-% Commands definitions to do the labeled easier %
-%
-LaTeXsetup:=LaTeXsetup & 
-"\def\ohm{\ifmmode \,\Omega \else $\,\Omega$\fi}" &
+numeric NumPic; NumPic:=0;
+picture LaTeXPic[]; 
+
+if readfrom(jobname&".mpt") <> EOF:
+  scantokens ("input "&jobname & ".mpt");
+fi;
+
+vardef latex@#(expr txt) =
+  NumPic := NumPic + 1 ;
+  if string txt :
+    write "% figure " & decimal charcode & " : " & char(10) &
+    "LaTeXPic[" & decimal NumPic & "] := btex " &
+    txt & " etex ;" to jobname & ".mpt" ;
+    if unknown LaTeXPic[NumPic] :
+      thelabel@#("[??]",origin)
+    else :
+      thelabel@#(LaTeXPic[NumPic],origin)
+    fi
+  else :
+    thelabel@#(txt,origin)
+  fi
+enddef ;
+
+write "verbatimtex" to jobname & ".mpt";
+write "\def\ohm{\ifmmode \,\Omega \else $\,\Omega$\fi}" &
 "\def\kohm{\,k\ifmmode \Omega \else $\Omega$\fi}" &
 "\def\modarg#1#2{\setbox0=\hbox{$\mkern-1mu/#2^\circ$}" &
 "\dp0=.21ex $#1\underline{\box0}$}" &
-"\font\tenss=cmss10";
+"\font\tenss=cmss10" to jobname & ".mpt";
+write "etex" to jobname & ".mpt";
 
-%
+%%%%%%%%%%
+
 newinternal labeling, rotatelabel, norotatelabel;
 labeling:=0; norotatelabel:=labeling; rotatelabel:=1;
 

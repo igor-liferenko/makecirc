@@ -1,9 +1,6 @@
 outputtemplate:="%j-%c.eps"; prologues:=3;
 input makecirc;
 
-initlatex("");
-
-
 beginfig(1);
 	source.a(origin, AC, 90,"v","220 V");
 	resistor.a(S.a.p+(2cm,1cm),normal,0,"R","5\ohm");
