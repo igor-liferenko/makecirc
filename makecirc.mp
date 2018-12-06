@@ -23,10 +23,12 @@ input latex;
 % Commands definitions to do the labeled easier %
 %
 LaTeXsetup:=LaTeXsetup & 
-"\def\ohm{\ensuremath{\,\Omega}}" &
-"\def\kohm{\,k\ensuremath{\Omega}}" &
+"\def\ohm{\ifmmode \,\Omega \else $\,\Omega$\fi}" &
+"\def\kohm{\,k\ifmmode \Omega \else $\Omega$\fi}" &
 "\def\modarg#1#2{\setbox0=\hbox{$\mkern-1mu/#2^\circ$}" &
-"\dp0=.21ex $#1\underline{\box0}$}";
+"\dp0=.21ex $#1\underline{\box0}$}" &
+"\font\tenss=cmss10";
+
 %
 newinternal labeling, rotatelabel, norotatelabel;
 labeling:=0; norotatelabel:=labeling; rotatelabel:=1;
@@ -311,7 +313,7 @@ vardef motor@#(expr z,ang,name,val)=
 	addto mot doublepath z--(z+(.4ssize,0));
 	addto mot doublepath (z+(1.6ssize,0))--(z+(2ssize,0));
 	addto mot doublepath fullcircle scaled ssize shifted (z+(ssize,0));
-	addto mot also thelabel(latex("\textsf{M}") scaled (ssize/6mm) 
+	addto mot also thelabel(latex("{\tenss M}") scaled (ssize/6mm) 
 	rotated (-ang), (z+(ssize,0)));
 	
 	path p,q,r,s,ca,cb,c,hc;
@@ -347,7 +349,7 @@ vardef generator@#(expr z,ang,name,val)=
 	addto gen doublepath z--(z+(.5ssize,0));
 	addto gen doublepath (z+(1.5ssize,0))--(z+(2ssize,0));
 	addto gen doublepath fullcircle scaled ssize shifted (z+(ssize,0));
-	addto gen also thelabel(latex("\textsf{G}") scaled (ssize/6mm) 
+	addto gen also thelabel(latex("{\tenss G}") scaled (ssize/6mm) 
 	rotated (-ang), (z+(ssize,0)));
 	
 	draw gen rotatedaround(z,ang) withpen line;
@@ -668,10 +670,10 @@ vardef meains@#(expr z,type,ang,name)=
 	if (type=volt) or (type=ampere):	
 		addto meter doublepath fullcircle scaled ssize shifted (z+(ssize,0));
 		if type=volt:
-			addto meter also thelabel(latex("\textsf{V}") scaled (ssize/6mm) 
+			addto meter also thelabel(latex("{\tenss V}") scaled (ssize/6mm) 
 			rotated (-ang), (z+(ssize,0)));
 		elseif type=ampere:
-			addto meter also thelabel(latex("\textsf{A}") scaled (ssize/6mm) 
+			addto meter also thelabel(latex("{\tenss A}") scaled (ssize/6mm) 
 			rotated (-ang), (z+(ssize,0)));
 		fi;
 	elseif (type=watt):
@@ -679,7 +681,7 @@ vardef meains@#(expr z,type,ang,name)=
 		addto meter doublepath (z+(.5ssize,-.5ssize))--(z+(.5ssize,.5ssize))
 		--(z+(1.5ssize,.5ssize))--(z+(1.5ssize,-.5ssize))--cycle;
 		addto meter doublepath (z+(ssize,-.5ssize))--(z+(ssize,-ssize));
-		addto meter also thelabel(latex("\textsf{W}") scaled (ssize/6mm) 
+		addto meter also thelabel(latex("{\tenss W}") scaled (ssize/6mm) 
 		rotated (-ang), (z+(ssize,0)));
 	fi;
 	

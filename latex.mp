@@ -182,7 +182,7 @@ string LaTeXsetup;  % additional packages and macro definitions for latex
 
 % Initialization
 NumPic:=0;
-LaTeXsetup:="\documentclass{article}";
+LaTeXsetup:="";
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Entry point
@@ -212,10 +212,8 @@ fi;
 %
 def initlatex primary s =
   write "verbatimtex" to jobname & ".mpt";
-  write "%&latex" to jobname & ".mpt";
-  write LaTeXsetup to jobname & ".mpt";
   write s to jobname & ".mpt";
-  write "\begin{document}" to jobname & ".mpt";
+  write LaTeXsetup to jobname & ".mpt";
   write "etex" to jobname & ".mpt";
 enddef;
 

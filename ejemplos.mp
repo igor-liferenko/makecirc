@@ -1,6 +1,7 @@
+outputtemplate:="%j-%c.eps"; prologues:=3;
 input makecirc;
 
-initlatex("\usepackage{amsmath,amssymb}");
+initlatex("");
 
 
 beginfig(1);
@@ -187,7 +188,7 @@ endfig;
 beginfig(12);
 	junction.a(origin,"")(bot);
 	junction.b((0,4cm),"")(top);
-	ctext.lft(J.a,J.b,"$V_a=V_L=120\,\text{V}$",witharrow);
+	ctext.lft(J.a,J.b,"$V_a=V_L=120\,$V",witharrow);
 	current.L(J.b+(5mm,0),0,"I_L","");
 	current.f(i.L.d+(5mm,-5mm),-90,"I_f","");
 	current.a(i.L.d+(2cm,0),0,"I_a","");
