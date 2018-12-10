@@ -1,33 +1,10 @@
-numeric NumPic; NumPic:=0;
-picture LaTeXPic[]; 
+input TEX;
 
-if readfrom(jobname&".mpt") <> EOF:
-  scantokens ("input "&jobname & ".mpt");
-fi;
-
-vardef latex@#(expr txt) =
-  NumPic := NumPic + 1 ;
-  if string txt :
-    write "% figure " & decimal charcode & " : " & char(10) &
-    "LaTeXPic[" & decimal NumPic & "] := btex " &
-    txt & " etex ;" to jobname & ".mpt" ;
-    if unknown LaTeXPic[NumPic] :
-      thelabel@#("[??]",origin)
-    else :
-      thelabel@#(LaTeXPic[NumPic],origin)
-    fi
-  else :
-    thelabel@#(txt,origin)
-  fi
-enddef ;
-
-write "verbatimtex" to jobname & ".mpt";
-write "\def\ohm{\ifmmode \,\Omega \else $\,\Omega$\fi}" &
+TEXPRE("\def\ohm{\ifmmode \,\Omega \else $\,\Omega$\fi}" &
 "\def\kohm{\,k\ifmmode \Omega \else $\Omega$\fi}" &
 "\def\modarg#1#2{\setbox0=\hbox{$\mkern-1mu/#2^\circ$}" &
 "\dp0=.21ex $#1\underline{\box0}$}" &
-"\font\tenss=cmss10" to jobname & ".mpt";
-write "etex" to jobname & ".mpt";
+"\font\tenss=cmss10");
 
 %%%%%%%%%%
 
@@ -135,7 +112,7 @@ enddef;
 % Macro to include text into the circuits %
 
 vardef puttext@#(expr txt, point)=
-	label@#(latex(txt),point);
+	label@#(TEX(txt),point);
 enddef;
 
 % Macro to center text among two pins %
@@ -148,12 +125,12 @@ vardef ctext@#(expr pin_beg,pin_end,txt,type)=
 	ctxt:=nullpicture;
 	%ahlength:=10;
 	if type=noarrow:
-		addto ctxt also thelabel(latex(txt),.5[pin_beg,pin_end]);
+		addto ctxt also thelabel(TEX(txt),.5[pin_beg,pin_end]);
 	elseif type=witharrow:
 		addto ctxt doublepath pin_beg--pin_end;
 		addto ctxt contour txtahead pin_beg--pin_end;
 		addto ctxt contour txtahead reverse(pin_beg--pin_end);
-		addto ctxt also thelabel@#(latex(txt),.5[pin_beg,pin_end]);
+		addto ctxt also thelabel@#(TEX(txt),.5[pin_beg,pin_end]);
 	fi;
 	draw ctxt withpen line;
 enddef;
@@ -168,59 +145,59 @@ lbsep:=3mm;
 def putlabel(expr pin_beg,pin_end,lchar,lcharv,ang,name,val)=
 if labeling=rotatelabel:
 		if ((ang > (-90)) and (ang <= 90)) or ((ang > 270) and (ang <= 450)):
-			label(latex("$" & name & "$") rotatedaround (.5[pin_beg,pin_end],ang), 
+			label(TEX("$" & name & "$") rotatedaround (.5[pin_beg,pin_end],ang), 
 			(lchar+lbsep)*dir (90+ang) shifted .5[pin_beg,pin_end]);
 			
-			label(latex(val) rotatedaround (.5[pin_beg,pin_end],ang),
+			label(TEX(val) rotatedaround (.5[pin_beg,pin_end],ang),
 			(lcharv+lbsep)*dir (270+ang) shifted .5[pin_beg,pin_end]);
 		elseif ((ang > 90) and (ang <= 270)) or ((ang > (-270)) and (ang <= (-90))):
-			label(latex("$" & name & "$") rotatedaround (.5[pin_beg,pin_end],180+ang), 
+			label(TEX("$" & name & "$") rotatedaround (.5[pin_beg,pin_end],180+ang), 
 			(lchar+lbsep)*dir (90+ang) shifted .5[pin_beg,pin_end]);
 			
-			label(latex(val) rotatedaround (.5[pin_beg,pin_end],180+ang),
+			label(TEX(val) rotatedaround (.5[pin_beg,pin_end],180+ang),
 			(lcharv+lbsep)*dir (270+ang) shifted .5[pin_beg,pin_end]);
 		fi;
 	elseif labeling=norotatelabel:
 		if (ang = 0):
-			label.top(latex("$" & name & "$"), (lchar+.25lbsep)*dir (90+ang) 
+			label.top(TEX("$" & name & "$"), (lchar+.25lbsep)*dir (90+ang) 
 			shifted .5[pin_beg,pin_end]);
 			
-			label.bot(latex(val),(lcharv+.25lbsep)*dir (270+ang) shifted .5[pin_beg,pin_end]);
+			label.bot(TEX(val),(lcharv+.25lbsep)*dir (270+ang) shifted .5[pin_beg,pin_end]);
 		elseif (ang > 0) and (ang < 90):
-			label.ulft(latex("$" & name & "$"), (lchar)*dir (90+ang) 
+			label.ulft(TEX("$" & name & "$"), (lchar)*dir (90+ang) 
 			shifted .5[pin_beg,pin_end]);
 			
-			label.lrt(latex(val),(lcharv)*dir (270+ang) shifted .5[pin_beg,pin_end]);
+			label.lrt(TEX(val),(lcharv)*dir (270+ang) shifted .5[pin_beg,pin_end]);
 		elseif (ang = 90):
-			label.lft(latex("$" & name & "$"),(lchar+.25lbsep)*dir (90+ang)
+			label.lft(TEX("$" & name & "$"),(lchar+.25lbsep)*dir (90+ang)
 			shifted .5[pin_beg,pin_end]);
 			
-			label.rt(latex(val),(lcharv+.25lbsep)*dir (270+ang) shifted .5[pin_beg,pin_end]);
+			label.rt(TEX(val),(lcharv+.25lbsep)*dir (270+ang) shifted .5[pin_beg,pin_end]);
 		elseif (90 < ang) and (ang < 180):
-			label.llft(latex("$" & name & "$"),(lchar)*dir (90+ang)
+			label.llft(TEX("$" & name & "$"),(lchar)*dir (90+ang)
 			shifted .5[pin_beg,pin_end]);
 			
-			label.urt(latex(val),(lcharv)*dir (270+ang) shifted .5[pin_beg,pin_end]);
+			label.urt(TEX(val),(lcharv)*dir (270+ang) shifted .5[pin_beg,pin_end]);
 		elseif (ang = 180) or (ang = (-180)):
-			label.bot(latex("$" & name & "$"), (lchar+.25lbsep)*dir (90+ang) 
+			label.bot(TEX("$" & name & "$"), (lchar+.25lbsep)*dir (90+ang) 
 			shifted .5[pin_beg,pin_end]);
 			
-			label.top(latex(val),(lcharv+.25lbsep)*dir (270+ang) shifted .5[pin_beg,pin_end]);
+			label.top(TEX(val),(lcharv+.25lbsep)*dir (270+ang) shifted .5[pin_beg,pin_end]);
 		elseif ((ang > 180) and (ang < 270)) or ((ang > (-180)) and (ang < (-90))):
-			label.lrt(latex("$" & name & "$"),(lchar)*dir (90+ang)
+			label.lrt(TEX("$" & name & "$"),(lchar)*dir (90+ang)
 			shifted .5[pin_beg,pin_end]);
 			
-			label.ulft(latex(val),(lcharv)*dir (270+ang) shifted .5[pin_beg,pin_end]);
+			label.ulft(TEX(val),(lcharv)*dir (270+ang) shifted .5[pin_beg,pin_end]);
 		elseif (ang = 270) or (ang = (-90)):
-			label.rt(latex("$" & name & "$"), (lchar+.25lbsep)*dir (90+ang) 
+			label.rt(TEX("$" & name & "$"), (lchar+.25lbsep)*dir (90+ang) 
 			shifted .5[pin_beg,pin_end]);
 			
-			label.lft(latex(val),(lcharv+.25lbsep)*dir (270+ang) shifted .5[pin_beg,pin_end]);
+			label.lft(TEX(val),(lcharv+.25lbsep)*dir (270+ang) shifted .5[pin_beg,pin_end]);
 		elseif ((270 < ang) and (ang < 360)) or ((ang < 0) and (ang > (-90))):
-			label.urt(latex("$" & name & "$"),(lchar)*dir (90+ang)
+			label.urt(TEX("$" & name & "$"),(lchar)*dir (90+ang)
 			shifted .5[pin_beg,pin_end]);
 			
-			label.llft(latex(val),(lcharv)*dir (270+ang) shifted .5[pin_beg,pin_end]);
+			label.llft(TEX(val),(lcharv)*dir (270+ang) shifted .5[pin_beg,pin_end]);
 		fi;
 	fi;
 enddef;
@@ -314,7 +291,7 @@ vardef motor@#(expr z,ang,name,val)=
 	addto mot doublepath z--(z+(.4ssize,0));
 	addto mot doublepath (z+(1.6ssize,0))--(z+(2ssize,0));
 	addto mot doublepath fullcircle scaled ssize shifted (z+(ssize,0));
-	addto mot also thelabel(latex("{\tenss M}") scaled (ssize/6mm) 
+	addto mot also thelabel(TEX("{\tenss M}") scaled (ssize/6mm) 
 	rotated (-ang), (z+(ssize,0)));
 	
 	path p,q,r,s,ca,cb,c,hc;
@@ -350,7 +327,7 @@ vardef generator@#(expr z,ang,name,val)=
 	addto gen doublepath z--(z+(.5ssize,0));
 	addto gen doublepath (z+(1.5ssize,0))--(z+(2ssize,0));
 	addto gen doublepath fullcircle scaled ssize shifted (z+(ssize,0));
-	addto gen also thelabel(latex("{\tenss G}") scaled (ssize/6mm) 
+	addto gen also thelabel(TEX("{\tenss G}") scaled (ssize/6mm) 
 	rotated (-ang), (z+(ssize,0)));
 	
 	draw gen rotatedaround(z,ang) withpen line;
@@ -671,10 +648,10 @@ vardef meains@#(expr z,type,ang,name)=
 	if (type=volt) or (type=ampere):	
 		addto meter doublepath fullcircle scaled ssize shifted (z+(ssize,0));
 		if type=volt:
-			addto meter also thelabel(latex("{\tenss V}") scaled (ssize/6mm) 
+			addto meter also thelabel(TEX("{\tenss V}") scaled (ssize/6mm) 
 			rotated (-ang), (z+(ssize,0)));
 		elseif type=ampere:
-			addto meter also thelabel(latex("{\tenss A}") scaled (ssize/6mm) 
+			addto meter also thelabel(TEX("{\tenss A}") scaled (ssize/6mm) 
 			rotated (-ang), (z+(ssize,0)));
 		fi;
 	elseif (type=watt):
@@ -682,7 +659,7 @@ vardef meains@#(expr z,type,ang,name)=
 		addto meter doublepath (z+(.5ssize,-.5ssize))--(z+(.5ssize,.5ssize))
 		--(z+(1.5ssize,.5ssize))--(z+(1.5ssize,-.5ssize))--cycle;
 		addto meter doublepath (z+(ssize,-.5ssize))--(z+(ssize,-ssize));
-		addto meter also thelabel(latex("{\tenss W}") scaled (ssize/6mm) 
+		addto meter also thelabel(TEX("{\tenss W}") scaled (ssize/6mm) 
 		rotated (-ang), (z+(ssize,0)));
 	fi;
 	
@@ -690,36 +667,36 @@ vardef meains@#(expr z,type,ang,name)=
 	
 	if labeling=rotatelabel:
 		if ((ang > (-90)) and (ang <= 90)) or ((ang > 270) and (ang <= 450)):
-			label(latex(name) rotatedaround (.5[mi@#.l,mi@#.r],ang), 
+			label(TEX(name) rotatedaround (.5[mi@#.l,mi@#.r],ang), 
 			(.5ssize+lbsep)*dir (90+ang) shifted .5[mi@#.l,mi@#.r]);
 		elseif ((ang > 90) and (ang <= 270)) or ((ang > (-270)) and (ang <= (-90))):
-			label(latex(name) rotatedaround (.5[mi@#.l,mi@#.r],180+ang), 
+			label(TEX(name) rotatedaround (.5[mi@#.l,mi@#.r],180+ang), 
 			(.5ssize+lbsep)*dir (90+ang) shifted .5[mi@#.l,mi@#.r]);
 		fi;
 	elseif labeling=norotatelabel:
 		if (ang = 0):
-			label.top(latex(name), (.5ssize+.25lbsep)*dir (90+ang) 
+			label.top(TEX(name), (.5ssize+.25lbsep)*dir (90+ang) 
 			shifted .5[mi@#.l,mi@#.r]);
 		elseif (ang > 0) and (ang < 90):
-			label.ulft(latex(name), (.5ssize)*dir (90+ang) 
+			label.ulft(TEX(name), (.5ssize)*dir (90+ang) 
 			shifted .5[mi@#.l,mi@#.r]);
 		elseif (ang = 90):
-			label.lft(latex(name),(.5ssize+.25lbsep)*dir (90+ang)
+			label.lft(TEX(name),(.5ssize+.25lbsep)*dir (90+ang)
 			shifted .5[mi@#.l,mi@#.r]);
 		elseif (90 < ang) and (ang < 180):
-			label.llft(latex(name),(.5ssize)*dir (90+ang)
+			label.llft(TEX(name),(.5ssize)*dir (90+ang)
 			shifted .5[mi@#.l,mi@#.r]);
 		elseif (ang = 180) or (ang = (-180)):
-			label.bot(latex(name), (.5ssize+.25lbsep)*dir (90+ang) 
+			label.bot(TEX(name), (.5ssize+.25lbsep)*dir (90+ang) 
 			shifted .5[mi@#.l,mi@#.r]);
 		elseif ((ang > 180) and (ang < 270)) or ((ang > (-180)) and (ang < (-90))):
-			label.lrt(latex(name),(.5ssize)*dir (90+ang)
+			label.lrt(TEX(name),(.5ssize)*dir (90+ang)
 			shifted .5[mi@#.l,mi@#.r]);
 		elseif (ang = 270) or (ang = (-90)):
-			label.rt(latex(name), (.5ssize+.25lbsep)*dir (90+ang) 
+			label.rt(TEX(name), (.5ssize+.25lbsep)*dir (90+ang) 
 			shifted .5[mi@#.l,mi@#.r]);
 		elseif ((270 < ang) and (ang < 360)) or ((ang < 0) and (ang > (-90))):
-			label.urt(latex(name),(.5ssize)*dir (90+ang)
+			label.urt(TEX(name),(.5ssize)*dir (90+ang)
 			shifted .5[mi@#.l,mi@#.r]);
 		fi;
 	fi;
@@ -753,7 +730,7 @@ junctiondiam:=1.25mm;
 vardef junction@#(expr z,name)(suffix $)=
 	pair J@#; J@#:=z;
 	draw z withpen pencircle scaled junctiondiam;
-	label.$(latex(name),z);
+	label.$(TEX(name),z);
 enddef;
 
 vardef impedance@#(expr z,ang,name,val)=
@@ -911,9 +888,9 @@ def imesh(expr c,wd,ht,dire,ang,name)=
 	fi;
 	
 	if labeling=rotatelabel:
-		addto im also thelabel(latex("$" & name & "$"),c);
+		addto im also thelabel(TEX("$" & name & "$"),c);
 	elseif labeling=norotatelabel:
-		addto im also thelabel(latex("$" & name & "$") rotatedaround(c,-ang),c);
+		addto im also thelabel(TEX("$" & name & "$") rotatedaround(c,-ang),c);
 	fi;
 	
 	draw im rotatedaround (c,ang) withpen line;
