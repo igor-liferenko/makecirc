@@ -1,1 +1,5 @@
+This serves as example of circuit drawings and to demonstrate trick how to speed up TEX processing when a lot of files are used.
+
 simply change "input TEX" to "input latex" temporarily while drawing and use two "mp" calls - it will be faster
+
+NOTE: this whole mess with TEX can be avoided in "makecirc" completely if we use btex/etex directly in "transistor" call (and others).
