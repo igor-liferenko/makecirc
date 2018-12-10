@@ -1,14 +1,14 @@
 numeric NumPic; NumPic:=0;
 picture LaTeXPic[]; 
 
-if readfrom("mpcirctmp.mp") <> EOF:
-  scantokens ("input mpcirctmp.mp");
+if readfrom("mptextmp.mp") <> EOF:
+  scantokens ("input mptextmp.mp");
 fi;
 
 vardef TEXPRE text s =
-  write "verbatimtex" to "mpcirctmp.mp";
-  write s to "mpcirctmp.mp";
-  write "etex" to "mpcirctmp.mp";
+  write "verbatimtex" to "mptextmp.mp";
+  write s to "mptextmp.mp";
+  write "etex" to "mptextmp.mp";
 enddef;
 
 vardef TEX@#(expr txt) =
@@ -16,7 +16,7 @@ vardef TEX@#(expr txt) =
   if string txt :
     write "% figure " & decimal charcode & " : " & char(10) &
     "LaTeXPic[" & decimal NumPic & "] := btex " &
-    txt & " etex ;" to "mpcirctmp.mp" ;
+    txt & " etex ;" to "mptextmp.mp" ;
     if unknown LaTeXPic[NumPic] :
       thelabel@#("[??]",origin)
     else :
